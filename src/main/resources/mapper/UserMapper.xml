@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tom.example.deepintomybatis.dao.UserDao">
+
+    <select id="getUserById" parameterType="Integer" resultType="com.tom.example.deepintomybatis.entity.User">
+        SELECT * FROM tb_user WHERE id = #{id}
+    </select>
+    <select id="getMaxId"  resultType="Integer">
+        SELECT MAX(id) FROM tb_user;
+    </select>
+    <!--
+    id="save" 是唯一的标识符
+    parameterType属性指明插入时使用的参数类型
+    useGeneratedKey="true"表示使用数据库的自动增长策略
+    -->
+    <insert id="save"  parameterType="com.tom.example.deepintomybatis.entity.User" useGeneratedKeys="true" >
+        INSERT INTO tb_user( userName, age, sex)
+        VALUES ( #{userName},#{age}, #{sex})
+    </insert>
+
+    <!-- insert操，
+    parameterType="user"表示该插入语句需要一个user对象作为参数
+    useGeneratedKeys="true"表示使用自动增长的主键 -->
+    <insert id="saveUser" parameterType="com.tom.example.deepintomybatis.entity.User"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tb_user(userName,age,sex)
+        VALUES(#{userName},#{age},#{sex})
+    </insert>
+
+    <!-- update操作
+parameterType="user"表示该更新语句需要一个user对象作为参数-->
+    <update id="modifyUser" parameterType="com.tom.example.deepintomybatis.entity.User">
+        UPDATE tb_user
+        SET userName = #{userName},sex = #{sex},age = #{age}
+        WHERE id = #{id}
+    </update>
+
+     <!--delete操作 parameterType="int"表示该查询语句需要一个int类型的参数-->
+    <delete id="removeUser" parameterType="int">
+        DELETE FROM tb_user WHERE id = #{id}
+    </delete>
+
+    <!-- select操作
+resultType="map"表示返回的是一个Map对象
+使用列名做key，值做value -->
+    <select id="selectUserMap" resultType="map">
+        SELECT * FROM tb_user
+    </select>
+
+
+
+</mapper>
