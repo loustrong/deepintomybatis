@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tom.example.deepintomybatis.dao.UserDao">
+    <!-- 开启二级缓存 -->
+<!--    一级缓存命中的条件:-->
+<!--    1. 同一会话(同一个sqlSession, 所以要开启事务)-->
+<!--    2. 同一个mapper接口,相同的参数-->
+<!--    3. 同一个mybatis环境(如: 一个使用生产环境, 一个使用开发环境配置文件)-->
+<!--    二级缓存命中的条件:-->
+<!--    1. 同一个mapper接口,相同的参数-->
+<!--    2. 同一个mybatis环境(如: 一个使用生产环境, 一个使用开发环境配置文件)-->
 
+    <cache />
     <select id="getUserById" parameterType="Integer" resultType="com.tom.example.deepintomybatis.entity.User">
         SELECT * FROM tb_user WHERE id = #{id}
     </select>
@@ -48,5 +57,47 @@ resultType="map"表示返回的是一个Map对象
     </select>
 
 
+
+    <!-- 映射学生对象的resultMap -->
+    <resultMap id="studentResultMap" type="com.tom.example.deepintomybatis.entity.Student">
+        <id property="id" column="id" />
+        <result property="name" column="name"/>
+        <result property="sex" column="sex"/>
+        <result property="age" column="age"/>
+        <!-- 关联映射 -->
+        <association property="clazz" column="clazz_id"
+                     javaType="com.tom.example.deepintomybatis.entity.Clazz"
+                     select="selectClazzWithId"/>
+    </resultMap>
+
+    <!-- 根据班级id查询班级 -->
+    <select id="selectClazzWithId" resultType="com.tom.example.deepintomybatis.entity.Clazz">
+        SELECT * FROM TB_CLAZZ where id = #{id}
+    </select>
+    <!-- 查询所有学生信息 -->
+    <select id="selectStudent" resultMap="studentResultMap">
+        SELECT * FROM TB_STUDENT
+    </select>
+
+
+    <!-- 映射班级对象的resultMap -->
+    <resultMap id="clazzResultMap" type="com.tom.example.deepintomybatis.entity.Clazz">
+        <id property="id" column="id" />
+        <result property="code" column="code"/>
+        <!-- 班级的学生属性，因为一个班级有多个学生，所以该属性是一个集合 -->
+        <collection property="students" javaType="ArrayList"
+                    column="id" ofType="com.tom.example.deepintomybatis.entity.Student"
+                    select="selectStudentWithId"/>
+    </resultMap>
+
+    <!-- 根据班级id查询学生 -->
+    <select id="selectStudentWithId" resultType="com.tom.example.deepintomybatis.entity.Student">
+        SELECT * FROM TB_STUDENT where clazz_id = #{id}
+    </select>
+
+    <!-- 查询所有班级信息 -->
+    <select id="selectClazz" resultMap="clazzResultMap">
+        SELECT * FROM TB_CLAZZ
+    </select>
 
 </mapper>

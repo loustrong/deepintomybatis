@@ -5,7 +5,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.tom.example.deepintomybatis.dao")
+// 使用註解注入時,需要指明需要掃描的包
+@MapperScan(value={"com.tom.example.deepintomybatis.dao",
+		"com.tom.example.deepintomybatis.mapper"})
 public class DeepintomybatisApplication {
 
 	public static void main(String[] args) {

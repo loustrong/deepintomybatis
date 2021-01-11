@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tom.example.deepintomybatis.dao.User2Dao">
+
+    <resultMap id="userResultMap" type="com.tom.example.deepintomybatis.entity.User2">
+        <id property="user_id" column="user_id"/>
+         <result property="user_name" column="user_name"/>
+        <result property="user_sex" column="user_sex"/>
+        <result property="user_age" column="user_age"/>
+    </resultMap>
+    <select id="selectUser2" resultMap="userResultMap">
+        SELECT * FROM tb_user2
+    </select>
+
+    <insert id="saveUser" parameterType="com.tom.example.deepintomybatis.entity.User2" statementType="CALLABLE">
+        {call insert_user(
+                #{user_id,mode=OUT,jdbcType=INTEGER},#{user_name,mode=IN},#{user_sex,mode=IN},#{user_age,mode=IN}
+            )}
+    </insert>
+
+    <select id="selectUser" resultType="com.tom.example.deepintomybatis.entity.User2" statementType="CALLABLE">
+        {call select_user()}
+    </select>
+
+    <select id="selectUserById" parameterType="int" resultType="com.tom.example.deepintomybatis.entity.User2" statementType="CALLABLE">
+        {call select_user_by_id(#{user_id,mode=IN})}
+    </select>
+
+    <update id="modifyUser" parameterType="com.tom.example.deepintomybatis.entity.User2" statementType="CALLABLE">
+        {call update_user(
+                #{user_id,mode=IN},#{user_name,mode=IN},#{user_sex,mode=IN},#{user_age,mode=IN}
+            )}
+    </update>
+
+    <delete id="removeUser" parameterType="com.tom.example.deepintomybatis.entity.User2" statementType="CALLABLE">
+        {call delete_user_by_id(#{user_id,mode=IN})}
+    </delete>
+
+
+
+
+
+</mapper>

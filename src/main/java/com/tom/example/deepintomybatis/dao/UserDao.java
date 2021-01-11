@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface UserDao {
     User getUserById(int id);
     int getMaxId();
+    void removeUser(int id);
+    void saveUser(User user);
 }
